@@ -100,10 +100,10 @@ function Server.WrapMethod(parent: Instance, tbl: {}, name: string, inboundMiddl
 end
 
 
-function Server.CreateSignal(parent: Instance, name: string, inboundMiddleware: Types.ServerMiddleware?, outboundMiddleware: Types.ServerMiddleware?)
+function Server.CreateSignal(parent: Instance, name: string, metadata: {any}?, inboundMiddleware: Types.ServerMiddleware?, outboundMiddleware: Types.ServerMiddleware?)
 	assert(Util.IsServer, "CreateSignal must be called from the server")
 	local folder = Util.GetCommSubFolder(parent, "RE"):Expect("Failed to get Comm RE folder")
-	local rs = RemoteSignal.new(folder, name, inboundMiddleware, outboundMiddleware)
+	local rs = RemoteSignal.new(folder, name, metadata, inboundMiddleware, outboundMiddleware)
 	return rs
 end
 

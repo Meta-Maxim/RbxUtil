@@ -24,8 +24,9 @@ RemoteSignal.__index = RemoteSignal
 	.Connected boolean
 ]=]
 
-function RemoteSignal.new(parent: Instance, name: string, inboundMiddleware: Types.ServerMiddleware?, outboundMiddleware: Types.ServerMiddleware?)
+function RemoteSignal.new(parent: Instance, name: string, metadata: {any}?, inboundMiddleware: Types.ServerMiddleware?, outboundMiddleware: Types.ServerMiddleware?)
 	local self = setmetatable({}, RemoteSignal)
+	self._metadata = metadata
 	self._re = Instance.new("RemoteEvent")
 	self._re.Name = name
 	self._re.Parent = parent
@@ -41,7 +42,7 @@ function RemoteSignal.new(parent: Instance, name: string, inboundMiddleware: Typ
 		self._re.OnServerEvent:Connect(function(player, ...)
 			local args = table.pack(...)
 			for _,middlewareFunc in ipairs(inboundMiddleware) do
-				local middlewareResult = table.pack(middlewareFunc(player, args))
+				local middlewareResult = table.pack(middlewareFunc(player, metadata, args))
 				if not middlewareResult[1] then
 					return
 				end
@@ -75,8 +76,9 @@ function RemoteSignal:_processOutboundMiddleware(player: Player?, ...: any)
 		return ...
 	end
 	local args = table.pack(...)
+	local metadata = self._metadata
 	for _,middlewareFunc in ipairs(self._outbound) do
-		local middlewareResult = table.pack(middlewareFunc(player, args))
+		local middlewareResult = table.pack(middlewareFunc(player, metadata, args))
 		if not middlewareResult[1] then
 			return table.unpack(middlewareResult, 2, middlewareResult.n)
 		end

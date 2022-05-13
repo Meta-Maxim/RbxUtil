@@ -129,8 +129,8 @@ end
 	end)
 	```
 ]=]
-function ServerComm:CreateSignal(name: string, inboundMiddleware: Types.ServerMiddleware?, outboundMiddleware: Types.ServerMiddleware?)
-	return Comm.CreateSignal(self._instancesFolder, name, inboundMiddleware, outboundMiddleware)
+function ServerComm:CreateSignal(name: string, metadata: {any}?, inboundMiddleware: Types.ServerMiddleware?, outboundMiddleware: Types.ServerMiddleware?)
+	return Comm.CreateSignal(self._instancesFolder, name, metadata, inboundMiddleware, outboundMiddleware)
 end
 
 --[=[
